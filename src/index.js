@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { AuthHandler } from './authHandler';
+import SwitchViews from './switchViews';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AuthHandler>
+      <SwitchViews />
+    </AuthHandler>
   </React.StrictMode>,
   document.getElementById('root')
 );

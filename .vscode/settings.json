@@ -1,0 +1,16 @@
+{
+  "files.eol": "\n",
+  "files.autoSave": "onFocusChange",
+  "eslint.alwaysShowStatus": true,
+  "editor.tabSize": 2,
+  "eslint.validate": ["javascript"],
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.codeActionsOnSave ": { "source.fixAll.eslint": true },
+  "javascript.validate.enable": false,
+  "[javascript]": {
+    "editor.formatOnSave": true,
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+  },
+}
