@@ -1,16 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+  BrowserRouter as Router
+} from "react-router-dom";
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { AuthHandler } from './authHandler';
-import SwitchViews from './switchViews';
+import Routes from './routes';
 
 ReactDOM.render(
-  <React.StrictMode>
+
+  <Router>
     <AuthHandler>
-      <SwitchViews />
+      <Routes />
     </AuthHandler>
-  </React.StrictMode>,
+  </Router>
+  ,
   document.getElementById('root')
 );
 

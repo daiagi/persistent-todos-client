@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-const serverUri = 'http://localhost:8080'
+import { useHistory } from "react-router-dom";
 
+import config from './api/api.config';
 
 // A context will be the way that we allow components lower down
 // the tree to trigger the display of an error page
@@ -11,6 +12,7 @@ const AuthContext = React.createContext();
 export const AuthHandler = ({ children }) => {
   const [userName, setUserName] = React.useState();
   const [errorstatus, setErrorStatus] = React.useState({});
+  const history = useHistory();
   const postHeader = {
     method: 'POST',
     headers: {
@@ -20,13 +22,11 @@ export const AuthHandler = ({ children }) => {
 
 
   }
-  const getToken = () => localStorage.getItem('accessToken');
 
-  const isAuthenticated = () => !!getToken();
 
   const login = async (email, password) => {
     const payload = JSON.stringify({ email, password });
-    const loginResponse = await fetch(`${serverUri}/api/auth/signin`, { body: payload, ...postHeader });
+    const loginResponse = await fetch(`${config.authApiUri}signin`, { body: payload, ...postHeader });
     if (loginResponse.status > 200) {
       setErrorStatus((prevState) => ({
         ...prevState,
@@ -39,10 +39,10 @@ export const AuthHandler = ({ children }) => {
     } else {
       const loginInfo = await loginResponse.json()
       localStorage.setItem('accessToken', loginInfo.accessToken)
-
       setUserName(loginInfo.username)
       setErrorStatus((prevState) => { prevState.loginError && delete prevState.loginError })
-      return loginInfo.username;
+      history.push('/home');
+
 
     }
 
@@ -61,7 +61,7 @@ export const AuthHandler = ({ children }) => {
   // We expose the context's value down to our components, while
   // also making sure to render the proper content to the screen
   return (
-    <AuthContext.Provider value={{ login, logOut, userName, getToken, isAuthenticated }}>
+    <AuthContext.Provider value={{ login, logOut, userName }}>
 
       <ErrorStatusContext.Provider value={{ error }}>
         {children}

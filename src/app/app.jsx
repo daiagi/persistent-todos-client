@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../authHandler';
-import TodoCard from '../todoCard';
-import { readAllTodos, deleteTodo, updateTodo } from '../api/todosApi';
-import { Container, Tooltip, Fab, Drawer, Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Container, Fab, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from "react-router-dom";
+import { deleteTodo, readAllTodos, updateTodo, createTodo, readTodo } from '../api/todosApi';
+import TodoCard from '../todoCard';
+import CreateTodoDialog from '../createTodoDialog';
 const addUiProps = (todo) => ({
   ui: {
     loading: {
@@ -32,9 +33,9 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const classes = useStyles();
-  const { getToken } = useAuth()
+  let history = useHistory();
   const [todos, setTodos] = useState({})
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const setTodo = (todoId, newState) => {
     const newTodo = { ...todos[todoId], ...newState };
     setTodos({ ...todos, [todoId]: newTodo })
@@ -66,6 +67,16 @@ const App = () => {
       setTodo(todoId, todo)
     })
   }
+  const createNewTodo = (body) => {
+    createTodo(body)
+      .then(({ todoId }) => readTodo(todoId))
+      .then((newTodo) => {
+        setTodos((todos) => ({ ...todos, [newTodo._id]: addUiProps(newTodo) }))
+      })
+
+  }
+
+
 
   const todoDoneAction = (todoId) => {
     const todo = { ...todos[todoId] };
@@ -82,10 +93,11 @@ const App = () => {
   }
 
   useEffect(() => {
-    readAllTodos().then(todos => {
-      const todosRecord = arrayToIdRecord(todos);
-      setTodos(todosRecord)
-    })
+    readAllTodos(() => history.push('/login'))
+      .then(todos => {
+        const todosRecord = arrayToIdRecord(todos);
+        setTodos(todosRecord)
+      })
   }, [])
 
   return (
@@ -99,21 +111,11 @@ const App = () => {
           key={toto.title} />))}
       </div>
       <Tooltip title="Add" aria-label="add">
-        <Fab onClick={() => setDrawerOpen(true)} color="primary" className={classes.fab}>
+        <Fab onClick={() => setCreateDialogOpen(true)} color="primary" className={classes.fab}>
           <AddIcon />
         </Fab>
       </Tooltip>
-      <Drawer anchor="bottom" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Paper>
-          {Object.values(todos).map((toto) => (<TodoCard
-            todo={toto}
-            onDelete={deleteTodoAction}
-            onDone={todoDoneAction}
-            onEdit={onEditAction}
-            key={toto.title} />))}
-        </Paper>
-
-      </Drawer>
+      <CreateTodoDialog open={createDialogOpen} create={createNewTodo} onClose={() => setCreateDialogOpen(false)} />
     </Container>
   )
 
