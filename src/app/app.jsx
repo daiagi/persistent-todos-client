@@ -69,8 +69,7 @@ const App = () => {
   }
   const createNewTodo = (body) => {
     createTodo(body)
-      .then(({ todoId }) => readTodo(todoId))
-      .then((newTodo) => {
+      .then(({ newTodo }) => {
         setTodos((todos) => ({ ...todos, [newTodo._id]: addUiProps(newTodo) }))
       })
 

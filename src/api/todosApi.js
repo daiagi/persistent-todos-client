@@ -13,7 +13,7 @@ const urls = {
 const headers = () => ({
   'Content-Type': 'application/json',
   Accept: 'application/json',
-  'x-access-token': getToken()
+  'Authorization': `Bearer ${getToken()}`
 })
 
 const requstOptions = (method, body) => ({
