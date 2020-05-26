@@ -1,6 +1,7 @@
 
 import { Button, Container, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { WebAuth } from 'auth0-js';
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from '../authHandler';
@@ -9,6 +10,15 @@ function validateEmail(email) {
   return re.test(email);
 }
 const validatePassword = (pass) => !!(pass && pass.length > 0);
+
+const auth0 = new WebAuth({
+  clientID: 'Sw3MxnUXC0ioZfA1e1exC0pr19OejqG8',
+  domain: 'bary.auth0.com',
+  responseType: 'token id_token',
+  audience: 'https://5tw0m2q7ck.execute-api.us-east-1.amazonaws.com/prod/api/todos',
+  redirectUri: 'https://festive-bardeen-eb9748.netlify.app/',
+  scope: 'openid profile CRUD:Todos'
+});
 
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +53,8 @@ export default function Login() {
 
   function onSubmit(data) {
     setLoginClicked(true);
-    login(data.email, data.password)
+    // login(data.email, data.password)
+    auth0.authorize();
   }
 
   return (
