@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Switch,
   Route,
+  Redirect,
 } from "react-router-dom";
 import Login from './login/login';
 import App from './app/app';
@@ -18,6 +19,10 @@ function Routes() {
       <Route path="/login">
         <Login />
       </Route>
+      <Route>
+        <Redirect to="/" />
+      </Route>
+
 
     </Switch>
 
