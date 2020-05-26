@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2)
   },
   done: {
-    borderColor: theme.palette.warning.main
+    borderColor: theme.palette.success.main
   },
   editable: {
     outline: "none"
